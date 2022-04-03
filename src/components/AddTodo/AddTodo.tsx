@@ -11,7 +11,12 @@ const AddTodo = ({setTodos}: Props) => {
   const [newTodoText, setNewTodoText] = useState<string>('')
 
   const handleInputChange = (event: any) => setNewTodoText(event.target.value)
-  const handleAdd = () => setTodos((todos: any) => [...todos, {id: uuid(), label: newTodoText}])
+  const handleAdd = () => setTodos((todos: any) => {
+    const addedTodo = [...todos, {id: uuid(), label: newTodoText}]
+
+    localStorage.setItem('todos', JSON.stringify(addedTodo))
+    return addedTodo
+  })
 
   return (
     <>

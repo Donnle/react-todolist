@@ -9,7 +9,12 @@ interface Props {
 }
 
 const TodoListItem = ({children, setTodos, id}: Props) => {
-  const handleRemoveItem = () => setTodos((todos: any) => todos.filter((todo: ITodo) => todo.id !== id))
+  const handleRemoveItem = () => setTodos((todos: any) => {
+    const filteredTodos = todos.filter((todo: ITodo) => todo.id !== id)
+
+    localStorage.setItem('todos', JSON.stringify(filteredTodos))
+    return filteredTodos
+  })
 
   return (
     <li> {children}

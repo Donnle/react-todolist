@@ -11,8 +11,13 @@ export interface ITodo {
 }
 
 const App = () => {
-  const [todos, setTodos] = useState<Array<ITodo>>([])
-  const handleClearTodos = () => setTodos([])
+  const todosFromLocalStorage = JSON.parse(localStorage.getItem('todos')!) || []
+  const [todos, setTodos] = useState<Array<ITodo>>(todosFromLocalStorage)
+
+  const handleClearTodos = () => setTodos(_ => {
+    localStorage.setItem('todos', '[]')
+    return []
+  })
 
   return (
     <div className={styles.wrapper}>
