@@ -1,26 +1,21 @@
 import {useState} from "react";
-import {v4 as uuid} from "uuid";
+import {connect} from "react-redux";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPlus} from "@fortawesome/free-solid-svg-icons";
+import {addTodo} from "../../redux/actions";
 
 interface Props {
-  setTodos: (param: any) => void
+  addTodo: (todoText: string) => void
 }
 
-const AddTodo = ({setTodos}: Props) => {
-  const [newTodoText, setNewTodoText] = useState<string>('')
+const AddTodo = ({addTodo}: Props) => {
+  const [todoText, setTodoText] = useState<string>('')
+  const handleInputChange = (event: any) => setTodoText(event.target.value)
 
-  const handleInputChange = (event: any) => setNewTodoText(event.target.value)
-  const handleAdd = () => setTodos((todos: any) => {
-    const addedTodo = [...todos, {id: uuid(), label: newTodoText}]
-
-    localStorage.setItem('todos', JSON.stringify(addedTodo))
-    return addedTodo
-  })
-
+  const handleAdd = () => addTodo(todoText)
   return (
     <>
-      <input type="text" placeholder="Enter new task" value={newTodoText} onChange={handleInputChange}/>
+      <input type="text" placeholder="Enter new task" value={todoText} onChange={handleInputChange}/>
       <button onClick={handleAdd}>
         <FontAwesomeIcon icon={faPlus}/>
       </button>
@@ -28,4 +23,11 @@ const AddTodo = ({setTodos}: Props) => {
   )
 }
 
-export default AddTodo
+const mapDispatchToProps = (dispatch: any) => ({
+  addTodo: (todoText: string) => dispatch(addTodo(todoText))
+})
+export default connect(null, mapDispatchToProps)(AddTodo)
+
+// const mapStateToProps = (state: any, props: Props) => ({})
+// const mapDispatchToProps = (dispatch: any, props: Props) => ({})
+// export default connect(mapStateToProps, mapDispatchToProps)(AddTodo)

@@ -1,38 +1,41 @@
-import {useState} from "react"
+import {connect} from "react-redux";
 import AddTodo from "../AddTodo"
 import TodoList from "../TodoList"
+import {countTodosSelector} from "../../redux/selectors";
+import {removeAllTodos} from "../../redux/actions";
 
 import styles from './App.module.css'
 
 
 export interface ITodo {
-  id: string,
-  label: string,
+  id: string
+  todoText: string
 }
 
-const App = () => {
-  const todosFromLocalStorage = JSON.parse(localStorage.getItem('todos')!) || []
-  const [todos, setTodos] = useState<Array<ITodo>>(todosFromLocalStorage)
+interface Props {
+  countTodos: string
+  removeAllTodos: () => void
+}
 
-  const handleClearTodos = () => setTodos(_ => {
-    localStorage.setItem('todos', '[]')
-    return []
-  })
-
-  return (
-    <div className={styles.wrapper}>
-      <header>Todo List</header>
-      <div className={styles.inputField}>
-        <AddTodo setTodos={setTodos}/>
-      </div>
-
-      <TodoList todos={todos} setTodos={setTodos}/>
-      <div className={styles.footer}>
-        <span>You have {todos.length} pending tasks.</span>
-        <button onClick={handleClearTodos}>Clear All</button>
-      </div>
+const App = ({countTodos, removeAllTodos}: Props) => (
+  <div className={styles.wrapper}>
+    <header>Todo List</header>
+    <div className={styles.inputField}>
+      <AddTodo/>
     </div>
-  );
-}
 
-export default App;
+    <TodoList/>
+    <div className={styles.footer}>
+      <span>You have {countTodos} pending tasks.</span>
+      <button onClick={removeAllTodos}>Clear All</button>
+    </div>
+  </div>
+)
+
+const mapStateToProps = (state: any) => ({
+  countTodos: countTodosSelector(state)
+})
+const mapDispatchToProps = (dispatch: any) => ({
+  removeAllTodos: () => dispatch(removeAllTodos())
+})
+export default connect(mapStateToProps, mapDispatchToProps)(App)

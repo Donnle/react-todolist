@@ -1,4 +1,6 @@
+import {connect} from "react-redux"
 import TodoListItem from "./TodoListItem"
+import {todosSelector} from "../../redux/selectors";
 import {ITodo} from "../App/App"
 
 import styles from "../App/App.module.css"
@@ -6,17 +8,19 @@ import styles from "../App/App.module.css"
 
 interface Props {
   todos: Array<ITodo>,
-  setTodos: (arg: any) => void
 }
 
-const TodoList = ({todos, setTodos}: Props) => {
-  return (
-    <ul className={styles.todoList}>
-      {todos.map(({id, label}: ITodo) =>
-        <TodoListItem key={id} id={id} setTodos={setTodos}>{label}</TodoListItem>
-      )}
-    </ul>
-  )
-}
+const TodoList = ({todos}: Props) => (
+  <ul className={styles.todoList}>
+    {todos.map(({id, todoText}: ITodo) =>
+      <TodoListItem key={id} id={id}>{todoText}</TodoListItem>
+    )}
+  </ul>
+)
 
-export default TodoList
+
+const mapStateToProps = (state: any) => ({
+  todos: todosSelector(state)
+})
+
+export default connect(mapStateToProps)(TodoList)

@@ -1,28 +1,24 @@
+import {connect} from "react-redux"
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
 import {faTrash} from "@fortawesome/free-solid-svg-icons"
-import {ITodo} from "../../App/App"
+import {removeTodo} from "../../../redux/actions";
 
 interface Props {
-  children: string,
-  setTodos: (arg: any) => void,
-  id: string,
+  removeTodo?: () => void
+  children: string
+  id: string
 }
 
-const TodoListItem = ({children, setTodos, id}: Props) => {
-  const handleRemoveItem = () => setTodos((todos: any) => {
-    const filteredTodos = todos.filter((todo: ITodo) => todo.id !== id)
+const TodoListItem = ({children, removeTodo}: Props) => (
+  <li> {children}
+    <span onClick={removeTodo}>
+      <FontAwesomeIcon icon={faTrash}/>
+    </span>
+  </li>
+)
 
-    localStorage.setItem('todos', JSON.stringify(filteredTodos))
-    return filteredTodos
-  })
 
-  return (
-    <li> {children}
-      <span onClick={handleRemoveItem}>
-        <FontAwesomeIcon icon={faTrash}/>
-      </span>
-    </li>
-  )
-}
-
-export default TodoListItem
+const mapDispatchToProps = (dispatch: any, props: Props) => ({
+  removeTodo: () => dispatch(removeTodo(props))
+})
+export default connect(null, mapDispatchToProps)(TodoListItem)
