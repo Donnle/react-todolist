@@ -1,5 +1,4 @@
 import produce from "immer";
-import {v4 as uuid} from "uuid";
 import {ADD_TODO, REMOVE_ALL_TODOS, REMOVE_TODO, TODOS} from "../constants";
 import {ITodo} from "../../components/App/App";
 
@@ -14,8 +13,7 @@ export default (state = initialState, action: any) => {
   switch (type) {
     case ADD_TODO:
       return produce(state, (draft: any) => {
-        const {todoText} = payload
-        const id = uuid()
+        const {todoText, id} = payload
         draft.entities.unshift({id, todoText})
       })
     case REMOVE_TODO:
